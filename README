@@ -1,0 +1,97 @@
+README
+ctserver package
+David Rowe 19/10/01 david@voicetronix.com.au
+
+INTRODUCTION
+
+A client/server library for rapid Computer Telephony (CT) application 
+development in Perl.  It uses Voicetronix hardware, and runs under Linux.
+
+QUICKSTART
+
+1. Install the Voicetronix card.
+2. Install the Voicetronix driver.
+3. make; make install
+4. cd CTPort; perl Makefile.PL; make install
+4. In console 1, start the server:
+   ./ctserver
+5. In console 2, start the sample client:
+   cd CTPort/samples
+   ./playrec.pl
+6. Dial a phone line connected to port 1 of the Voicetronix card.
+
+NOTES
+
+- client talks to server via TCP/IP
+- there is one client process per line
+- single server process (ctserver) handles multiple lines
+- uses TCP/IP ports 1200..1203 for ports 1..4 of the CT card
+
+MANIFEST
+
+CTPort/        client-side Perl module, tests and samples
+ctserver.cpp   server source, start ctserver before running any client scripts
+UsEngM         audio files (borrowed from Bayonne - thanks David Sugar)
+CTPort/samples several sample applications:
+	       playrec.pl	    Plays and records files
+	       dialout.pl           Outbound dialling
+               clickcall.pl         Web-based click-call application
+
+DOCUMENTATION
+
+- after installing 'man Telephony::CTPort' or 'perldoc Telephony::CTPort'
+- this file
+- Also see CTPort/CTPort.pm & samples
+
+PROGRAMMING MODEL
+
+The programming model is based on the ccscript language developed by David 
+Sugar for the IVR server Bayonne.  David has developed this new scripting 
+language that enables elegant implementations of IVR menus.  For other tasks,
+Bayonne has the ability to shell out to other languages.  Typical Bayonne
+applications use ccscript for menus, then shell out to Perl for other
+tasks such as database lookup, and complicated logic.
+
+The ctserver package uses a variation of this approach.  Rather than writing a
+new language, the advantages of the ccscript programming model have been 
+imported into a powerful existing language (Perl) by writing a small module.
+This allows CT applications to be written entirely in one language.  
+
+The result is an easy way to write CT applications.  Perl is a very useful
+language for CT, the author has found it possible to write CT 
+applications in a fraction of the time it takes in C/C++.  This approach
+could also be extended to other languages (LISP, Python etc) by writing
+appropriate client-side libraries.
+
+There is a single Perl process for each line.  To support multiple lines, 
+start multiple Perl processes, one for each line.  
+
+Some features of the programming model are:
+- play and ctsleep block unless a DTMF key is pressed
+- once a key has been pressed they will not block until clear is called
+- see the samples and Telephony::CTPort documentation for more info
+
+PROTOCOL
+
+The protocol between the clients and servers is a simple text protocol.
+
+FUTURE WORK
+
+- write a Python version of the server library to enable Python CT development
+- write more sample applications
+- write servers for different CT cards
+- write a server that uses /dev/dsp rather than a CT card
+- modify client/serer protocol to be compatible with telnet
+ 
+CREDITS
+
+David Sugar   - designed the ccscript programming model, provided voice files
+	        via Bayonne.
+Rich Bodo     - ideas on TOSI architecture and client/server model
+Dave Bakhash  - ideas on client/server model using LISP
+
+REFERENCES
+
+Bayonne....: www.gnu.org/software/bayonne/bayonne.html
+Voicetronix: www.voicetronix.com.au
+
